@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17
+
+    container_name: founderai-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: founder
+      POSTGRES_PASSWORD: founder
+      POSTGRES_DB: founder_ai
+
+    ports:
+      - "15432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
