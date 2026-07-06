@@ -4,19 +4,25 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "FounderAI"
-    app_version: str = "0.1.0"
+    app_name: str
+    app_version: str
 
-    environment: str = "development"
+    environment: str
 
-    debug: bool = True
+    debug: bool
 
-    api_v1_prefix: str = "/api/v1"
+    host: str
+    port: int
 
-    host: str = "0.0.0.0"
-    port: int = 8000
+    api_v1_prefix: str
 
     database_url: str
+
+    ollama_host: str
+
+    llm_model: str
+
+    log_level: str
 
     model_config = SettingsConfigDict(
         env_file=".env",
