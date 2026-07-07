@@ -1,6 +1,6 @@
 from app.agents.base import BaseAgent
 from app.agents.schemas import CEOAnalysis
-
+from app.utils.prompt_loader import load_prompt
 
 class CEOAgent(BaseAgent):
     @property
@@ -11,32 +11,8 @@ class CEOAgent(BaseAgent):
     def objective(self) -> str:
         return "Analyze startup ideas and define the business vision."
 
-    def system_prompt(self) -> str:
-        return """
-You are an experienced startup CEO.
-
-Analyze the startup idea.
-
-Return ONLY valid JSON.
-
-Do not include markdown.
-Do not include explanations.
-
-Return exactly this schema:
-
-{
-    "vision": "...",
-    "mission": "...",
-    "target_market": "...",
-    "target_users": [
-        "..."
-    ],
-    "revenue_model": "...",
-    "risks": [
-        "..."
-    ]
-}
-"""
+    def system_prompt(self):
+        return load_prompt("ceo")
 
     def generate(self, user_prompt: str) -> CEOAnalysis:
         return self.llm.generate_structured(
