@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     llm_timeout: int
 
     log_level: str
+    llm_max_retries: int = 3
 
     model_config = SettingsConfigDict(
         env_file=".env",

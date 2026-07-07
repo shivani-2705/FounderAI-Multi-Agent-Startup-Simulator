@@ -1,14 +1,18 @@
 class LLMError(Exception):
-    """Base exception for all LLM-related errors."""
-
-
-class ModelNotFoundError(LLMError):
-    """Raised when the configured model is unavailable."""
-
-
-class InvalidResponseError(LLMError):
-    """Raised when the model returns an unexpected response."""
+    """Base exception."""
 
 
 class LLMConnectionError(LLMError):
-    """Raised when Ollama cannot be reached."""
+    """Cannot connect to provider."""
+
+
+class ModelNotFoundError(LLMError):
+    """Configured model not found."""
+
+
+class InvalidResponseError(LLMError):
+    """Invalid LLM response."""
+
+
+class StructuredOutputError(LLMError):
+    """Cannot parse structured output."""

@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.agents.schemas import CEOAnalysis
 from app.schemas.startup import StartupRequest
 from app.workflows.startup_workflow import startup_workflow
+from app.services.ai_service import ai_service
 
 router = APIRouter()
 
@@ -14,6 +15,6 @@ router = APIRouter()
 def analyze_startup(
     request: StartupRequest,
 ):
-    return startup_workflow.run(
-        request.idea
-    )
+    return ai_service.analyze_startup(
+    request.idea
+)
