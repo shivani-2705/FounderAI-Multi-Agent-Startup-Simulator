@@ -20,7 +20,13 @@ class Settings(BaseSettings):
 
     ollama_host: str
 
+    llm_provider: str
+
     llm_model: str
+
+    llm_temperature: float
+
+    llm_timeout: int
 
     log_level: str
 
