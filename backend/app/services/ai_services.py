@@ -1,5 +1,5 @@
 from app.agents.contracts import CEOAnalysis
-from app.workflows.startup_workflow import startup_workflow
+from app.orchestrator.orchestrator import startup_orchestrator
 
 
 class AIService:
@@ -12,9 +12,7 @@ class AIService:
         idea: str,
     ) -> CEOAnalysis:
 
-        return startup_workflow.run(
-            idea
-        )
+        return startup_orchestrator.execute(idea)
 
 
 ai_service = AIService()
