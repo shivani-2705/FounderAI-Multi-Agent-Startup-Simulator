@@ -17,3 +17,20 @@ class TechnicalArchitecture(BaseModel):
     ai_stack: list[str]
     deployment: list[str]
     risks: list[str]
+
+
+class UserPersona(BaseModel):
+    name: str
+    description: str | None = None
+    goals: list[str] = []
+    pain_points: list[str] = []
+
+class PRDDocument(BaseModel):
+    product_name: str
+    problem_statement: str
+    solution_summary: str
+    core_features: list[str]
+    user_personas: list[UserPersona]
+    mvp_scope: list[str]
+    future_scope: list[str]
+    success_metrics: list[str]
