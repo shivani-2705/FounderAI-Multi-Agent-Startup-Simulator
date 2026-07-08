@@ -1,4 +1,4 @@
-from app.agents.schemas import CEOAnalysis
+from app.agents.contracts import CEOAnalysis
 from app.workflows.startup_workflow import startup_workflow
 
 

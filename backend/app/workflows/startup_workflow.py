@@ -1,5 +1,5 @@
 from app.agents.ceo import CEOAgent
-from app.agents.schemas import CEOAnalysis
+from app.agents.contracts import CEOAnalysis
 
 
 class StartupWorkflow:

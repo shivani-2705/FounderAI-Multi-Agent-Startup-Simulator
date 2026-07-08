@@ -1,5 +1,5 @@
 from app.agents.base import BaseAgent
-from app.agents.schemas import CEOAnalysis
+from app.agents.contracts import CEOAnalysis
 from app.utils.prompt_loader import load_prompt
 
 class CEOAgent(BaseAgent):

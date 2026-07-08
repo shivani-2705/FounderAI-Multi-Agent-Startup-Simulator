@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
-from app.agents.schemas import CEOAnalysis
+from app.agents.contracts import CEOAnalysis
 from app.schemas.startup import StartupRequest
 from app.workflows.startup_workflow import startup_workflow
-from app.services.ai_service import ai_service
+from app.services.ai_services import ai_service
 
 router = APIRouter()
 
