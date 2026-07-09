@@ -1,6 +1,11 @@
 from app.agents.base import BaseAgent
 from app.agents.contracts import CEOAnalysis
 from app.utils.prompt_loader import load_prompt
+from app.agents.contracts import (
+    AgentReview,
+    ReviewDecision,
+)
+import json
 
 class CEOAgent(BaseAgent):
     @property
@@ -20,3 +25,38 @@ class CEOAgent(BaseAgent):
             user_prompt=user_prompt,
             response_model=CEOAnalysis,
         )
+    def review(
+        self,
+        feedback: str,
+    ) -> AgentReview:
+
+        return AgentReview(
+            decision=ReviewDecision.REVISION_REQUIRED,
+            feedback=feedback,
+        )
+
+    def revise(
+            self,
+            analysis: CEOAnalysis,
+            feedback: str,
+        ) -> CEOAnalysis:
+
+            prompt = (
+                f"""
+        Previous analysis:
+
+        {json.dumps(analysis.model_dump(), indent=2)}
+
+        CTO Feedback:
+
+        {feedback}
+        """
+            )
+
+            return self.llm.generate_structured(
+                system_prompt=load_prompt("ceo_revision"),
+                user_prompt=prompt,
+                response_model=CEOAnalysis,
+            )
+
+            

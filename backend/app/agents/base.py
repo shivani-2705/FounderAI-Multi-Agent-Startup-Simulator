@@ -22,6 +22,15 @@ class BaseAgent(ABC):
     def system_prompt(self) -> str:
         pass
 
+   
+    def review(self, *args, **kwargs):
+        """
+        Review another agent's work.
+        """
+        raise NotImplementedError(
+            f"{self.role} does not support reviews."
+        )
+
     def generate(self, user_prompt: str) -> LLMResponse:
         return self.llm.generate(
             system_prompt=self.system_prompt(),

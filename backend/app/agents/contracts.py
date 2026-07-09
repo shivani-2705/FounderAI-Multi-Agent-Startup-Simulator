@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from enum import Enum
 
 
 class CEOAnalysis(BaseModel):
@@ -34,3 +35,11 @@ class PRDDocument(BaseModel):
     mvp_scope: list[str]
     future_scope: list[str]
     success_metrics: list[str]
+
+class ReviewDecision(str, Enum):
+    APPROVED = "approved"
+    REVISION_REQUIRED = "revision_required"
+
+class AgentReview(BaseModel):
+    decision: ReviewDecision
+    feedback: str

@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.agents.contracts import (
     CEOAnalysis,
     TechnicalArchitecture,
     PRDDocument,
 )
-
+from app.memory.history import ConversationHistory
 
 class StartupState(BaseModel):
     idea: str
@@ -15,3 +15,7 @@ class StartupState(BaseModel):
     technical_architecture: TechnicalArchitecture | None = None
 
     prd: PRDDocument | None = None
+
+    history: ConversationHistory = Field(
+    default_factory=ConversationHistory
+)
