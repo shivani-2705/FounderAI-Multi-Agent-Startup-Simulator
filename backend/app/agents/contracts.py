@@ -43,3 +43,59 @@ class ReviewDecision(str, Enum):
 class AgentReview(BaseModel):
     decision: ReviewDecision
     feedback: str
+
+class ColorPalette(BaseModel):
+    primary: str
+    secondary: str
+    accent: str
+    background: str
+    surface: str
+    text: str
+
+
+class Typography(BaseModel):
+    font_family: str
+    heading_style: str
+    body_style: str
+
+
+class Accessibility(BaseModel):
+    language_support: str
+    keyboard_navigation: str
+    contrast: str
+
+
+class DesignComponent(BaseModel):
+    component: str
+    description: str
+
+
+class DesignDocument(BaseModel):
+    design_style: str
+    color_palette: ColorPalette
+    typography: Typography
+    design_principles: list[str]
+    key_screens: list[str]
+    user_flow: list[str]
+    ui_components: list[DesignComponent]
+    accessibility: Accessibility
+
+
+class MarketingStrategy(BaseModel):
+    brand_positioning: str
+    value_proposition: str
+    target_audience: list[str]
+    marketing_channels: list[str]
+    launch_plan: list[str]
+    content_strategy: list[str]
+    success_metrics: list[str]
+
+class InvestmentReport(BaseModel):
+    investment_score: int
+    recommendation: str
+    strengths: list[str]
+    weaknesses: list[str]
+    risks: list[str]
+    suggested_valuation: str
+    funding_stage: str
+    next_steps: list[str]

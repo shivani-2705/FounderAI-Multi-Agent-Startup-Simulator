@@ -1,26 +1,35 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_db
-from app.schemas.project import (
-    ProjectCreate,
-    ProjectResponse,
+
+from app.repositories.project_repository import (
+    project_repository,
 )
-from app.services.project_service import ProjectService
-
-router = APIRouter()
 
 
-@router.post(
-    "/projects",
-    response_model=ProjectResponse,
-    status_code=201,
+router = APIRouter(
+    prefix="/projects",
+    tags=["Projects"],
 )
-def create_project(
-    request: ProjectCreate,
+
+
+@router.get("/{project_id}")
+def get_project(
+    project_id: str,
     db: Session = Depends(get_db),
 ):
 
-    service = ProjectService(db)
+    project = project_repository.get(
+        db,
+        project_id,
+    )
 
-    return service.create_project(request)
+    if not project:
+        raise HTTPException(
+            status_code=404,
+            detail="Project not found",
+        )
+
+    return project

@@ -5,22 +5,39 @@ from app.db.models.project import Project
 
 class ProjectRepository:
 
-    def __init__(self, db: Session):
-        self.db = db
-
     def create(
         self,
-        name: str,
-        idea: str,
+        db: Session,
+        project: Project,
     ) -> Project:
 
-        project = Project(
-            name=name,
-            idea=idea,
+        db.add(project)
+        db.commit()
+        db.refresh(project)
+        return project
+
+    def update(
+        self,
+        db: Session,
+        project: Project,
+    ) -> Project:
+
+        db.add(project)
+        db.commit()
+        db.refresh(project)
+        return project
+
+    def get(
+        self,
+        db: Session,
+        project_id: str,
+    ) -> Project | None:
+
+        return (
+            db.query(Project)
+            .filter(Project.id == project_id)
+            .first()
         )
 
-        self.db.add(project)
-        self.db.commit()
-        self.db.refresh(project)
 
-        return project
+project_repository = ProjectRepository()

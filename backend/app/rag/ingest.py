@@ -3,8 +3,8 @@ import uuid
 
 from app.rag.client import chroma_client
 from app.rag.chunker import chunker
-from app.rag.pdf_loader import pdf_loader
 from app.rag.embedder import embedder
+from app.rag.pdf_loader import pdf_loader
 
 
 class KnowledgeIngestor:
@@ -23,29 +23,59 @@ class KnowledgeIngestor:
 
         for pdf in pdf_files:
 
+            print("=" * 80)
             print(f"Ingesting {pdf.name}")
 
-            text = pdf_loader.load(str(pdf))
+            try:
 
-            chunks = chunker.split(text)
+                text = pdf_loader.load(str(pdf))
 
-            for index, chunk in enumerate(chunks):
+                chunks = chunker.split(text)
 
-                embedding = embedder.embed(chunk)
+                print(f"Total chunks: {len(chunks)}")
 
-                collection.add(
-                    ids=[str(uuid.uuid4())],
-                    documents=[chunk],
-                    embeddings=[embedding],
-                    metadatas=[
-                        {
-                            "source": pdf.name,
-                            "chunk": index,
-                        }
-                    ],
+                
+
+                BATCH_SIZE = 32
+
+                for batch_start in range(0, len(chunks), BATCH_SIZE):
+
+                    batch_chunks = chunks[
+                        batch_start: batch_start + BATCH_SIZE
+                    ]
+
+                    embeddings = embedder.embed_batch(batch_chunks)
+
+                    collection.add(
+                        ids=[
+                            str(uuid.uuid4())
+                            for _ in batch_chunks
+                        ],
+                        documents=batch_chunks,
+                        embeddings=embeddings,
+                        metadatas=[
+                            {
+                                "source": pdf.name,
+                                "chunk": batch_start + i,
+                            }
+                            for i in range(len(batch_chunks))
+                        ],
+                    )
+
+                                   
+
+            except Exception as e:
+
+                print(
+                    f"❌ Failed to ingest {pdf.name}"
                 )
 
-        print("Done!")
+                print(e)
+
+                continue
+
+        print("=" * 80)
+        print("Knowledge ingestion completed.")
 
 
 knowledge_ingestor = KnowledgeIngestor()

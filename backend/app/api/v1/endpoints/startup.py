@@ -1,20 +1,32 @@
-from fastapi import APIRouter
-from app.workflows.state import StartupState
+from fastapi import APIRouter, Depends
 
-from app.schemas.startup import StartupRequest
-from app.workflows.startup_workflow import startup_workflow
-from app.services.ai_services import ai_service
+from sqlalchemy.orm import Session
 
-router = APIRouter()
+from app.api.dependencies import get_db
 
-
-@router.post(
-    "/startup/analyze",
-    response_model=StartupState,
+from app.orchestrator.orchestrator import (
+    startup_orchestrator,
 )
-def analyze_startup(
-    request: StartupRequest,
+
+
+router = APIRouter(
+    prefix="/startup",
+    tags=["Startup"],
+)
+
+
+@router.post("/run")
+def run_startup(
+    idea: str,
+    db: Session = Depends(get_db),
 ):
-    return ai_service.analyze_startup(
-    request.idea
-)
+
+    result = startup_orchestrator.execute(
+        db=db,
+        idea=idea,
+    )
+
+    return {
+        "message": "Startup analysis completed",
+        "data": result,
+    }
