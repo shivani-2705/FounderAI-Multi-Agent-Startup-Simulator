@@ -47,3 +47,17 @@ Use the retrieved knowledge whenever relevant.
 Do not copy the context verbatim.
 
 Return ONLY valid JSON.
+
+The response MUST contain exactly these fields:
+
+- investment_score
+- recommendation
+- strengths
+- weaknesses
+- risks
+- suggested_valuation
+- funding_stage
+- next_steps
+
+Do not add any other fields.
+Do not rename any fields.
