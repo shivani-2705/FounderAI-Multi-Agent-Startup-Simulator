@@ -1,17 +1,46 @@
-from pydantic import BaseModel, Field
+from typing import Any
+
+from pydantic import BaseModel
 
 
 class ProjectCreate(BaseModel):
-    name: str = Field(..., min_length=3, max_length=200)
-    idea: str = Field(..., min_length=10)
+    name: str
+    idea: str
+
+
+class ProjectCreateResponse(BaseModel):
+    project_id: str
+    status: str
+
+
+class ProjectResults(BaseModel):
+    ceo_analysis: dict[str, Any] | None = None
+    technical_architecture: dict[str, Any] | None = None
+    prd: dict[str, Any] | None = None
+    design: dict[str, Any] | None = None
+    marketing: dict[str, Any] | None = None
+    investment: dict[str, Any] | None = None
 
 
 class ProjectResponse(BaseModel):
-    id: str
-    name: str
-    idea: str
+    project_id: str
     status: str
+    idea: str
 
-    model_config = {
-        "from_attributes": True
-    }
+    current_agent: str | None = None
+    progress: int
+    error_message: str | None = None
+
+    results: ProjectResults
+
+
+class ProjectStatusResponse(BaseModel):
+    project_id: str
+    status: str
+    current_agent: str | None = None
+    progress: int
+
+
+class ProjectHistoryResponse(BaseModel):
+    project_id: str
+    events: list

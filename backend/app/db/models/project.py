@@ -5,6 +5,7 @@ from sqlalchemy import (
     DateTime,
     String,
     JSON,
+    Integer,
 )
 
 from sqlalchemy.orm import (
@@ -42,6 +43,22 @@ class Project(Base):
     status: Mapped[str] = mapped_column(
         String(50),
         default="draft",
+    )
+
+    current_agent = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    progress = mapped_column(
+        Integer,
+        default=0,
+        nullable=False,
+    )
+
+    error_message = mapped_column(
+        String,
+        nullable=True,
     )
 
 
@@ -92,3 +109,5 @@ class Project(Base):
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
     )
+
+    

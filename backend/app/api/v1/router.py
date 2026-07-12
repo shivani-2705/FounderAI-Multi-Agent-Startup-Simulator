@@ -3,7 +3,6 @@ from fastapi import APIRouter
 from app.api.v1.endpoints import (
     health,
     projects,
-    startup,
 )
 
 router = APIRouter()
@@ -18,7 +17,3 @@ router.include_router(
     tags=["Projects"],
 )
 
-router.include_router(
-    startup.router,
-    tags=["Startup"],
-)
