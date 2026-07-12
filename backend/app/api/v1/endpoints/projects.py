@@ -1,5 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    HTTPException,
+)
+from app.tasks.startup_task import (
+    run_startup_project,
+)
+
 from sqlalchemy.orm import Session
+from app.orchestrator.orchestrator import (
+    startup_orchestrator,
+)
 
 from app.api.dependencies import get_db
 from app.repositories.project_repository import project_repository
@@ -24,6 +36,7 @@ router = APIRouter(
 )
 def create_project(
     idea: str,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
     """
@@ -36,10 +49,16 @@ def create_project(
         idea=idea,
     )
 
+    background_tasks.add_task(
+       run_startup_project,
+        project.id,
+    )
+
     return ProjectCreateResponse(
         project_id=project.id,
         status=project.status,
     )
+
 
 
 @router.get(
