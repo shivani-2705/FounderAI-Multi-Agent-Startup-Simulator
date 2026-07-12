@@ -16,12 +16,47 @@ export interface ProjectResponse {
 
     progress: number;
 
+    error_message: string | null;
+
     idea: string;
 
     results: ProjectResults;
 }
 
+export interface ProjectStatusResponse {
+    project_id: string;
+
+    status: string;
+
+    current_agent: string;
+
+    progress: number;
+}
+
 export interface CreateProjectResponse {
     project_id: string;
+
     status: string;
+}
+
+
+export interface HistoryEvent {
+    timestamp: string;
+    agent: string;
+    event_type:
+        | "analysis"
+        | "review"
+        | "question"
+        | "answer"
+        | "revision"
+        | "decision";
+
+    content: string;
+
+}
+
+export interface ProjectHistoryResponse {
+    project_id: string;
+    events: HistoryEvent[];
+
 }

@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
 
-import { getProject } from "../services/projectService";
+import {
+    getProject,
+    getProjectStatus,
+} from "../services/projectService";
 
-import type { ProjectResponse } from "../types/project";
+import type {
+    ProjectResponse,
+    ProjectStatusResponse,
+} from "../types/project";
 
 export function useProject(
-    projectId: string
+    projectId: string,
 ) {
     const [project, setProject] =
         useState<ProjectResponse | null>(null);
+
+    const [status, setStatus] =
+        useState<ProjectStatusResponse | null>(null);
 
     const [loading, setLoading] =
         useState(true);
@@ -16,53 +25,78 @@ export function useProject(
     const [error, setError] =
         useState("");
 
-        useEffect(() => {
-            let timeoutId: number | undefined;
-            let cancelled = false;
+    useEffect(() => {
+        if (!projectId) {
+            return;
+        }
 
-            if (!projectId) {
-                return;
-            }
-    
-        
-            async function loadProject() {
-                try {
-                    const data = await getProject(projectId);
-        
-                    if (cancelled) return;
-        
-                    setProject(data);
-                    setLoading(false);
-        
-                    if (
-                        data.status !== "completed" &&
-                        data.status !== "failed"
-                    ) {
-                        timeoutId = window.setTimeout(
-                            loadProject,
-                            2000
-                        );
+        let cancelled = false;
+        let timeoutId: number | undefined;
+
+        async function pollStatus() {
+            try {
+                const statusData =
+                    await getProjectStatus(projectId);
+
+                if (cancelled) {
+                    return;
+                }
+
+                setStatus(statusData);
+
+                if (
+                    statusData.status === "completed"
+                ) {
+                    const projectData =
+                        await getProject(projectId);
+
+                    if (cancelled) {
+                        return;
                     }
-                } catch {
-                    if (cancelled) return;
-        
-                    setError("Failed to load project");
+
+                    setProject(projectData);
                     setLoading(false);
+                    return;
                 }
+
+                if (
+                    statusData.status === "failed"
+                ) {
+                    setLoading(false);
+                    setError("Project execution failed.");
+                    return;
+                }
+
+                timeoutId = window.setTimeout(
+                    pollStatus,
+                    2000,
+                );
+            } catch {
+                if (cancelled) {
+                    return;
+                }
+
+                setLoading(false);
+                setError(
+                    "Failed to load project.",
+                );
             }
-        
-            loadProject();
-        
-            return () => {
-                cancelled = true;
-        
-                if (timeoutId) {
-                    clearTimeout(timeoutId);
-                }
-            };
-        }, [projectId]);
+        }
+
+        pollStatus();
+
+        return () => {
+            cancelled = true;
+
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+    }, [projectId]);
+
     return {
         project,
+        status,
         loading,
         error,
     };

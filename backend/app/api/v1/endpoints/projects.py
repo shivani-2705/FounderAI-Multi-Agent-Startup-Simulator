@@ -138,7 +138,6 @@ def get_project_history(
     project_id: str,
     db: Session = Depends(get_db),
 ):
-
     project = project_repository.get(
         db=db,
         project_id=project_id,

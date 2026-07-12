@@ -3,6 +3,7 @@ import client from "../api/client";
 import type {
     CreateProjectResponse,
     ProjectResponse,
+    ProjectStatusResponse,
 } from "../types/project";
 
 export async function createProject(
@@ -28,6 +29,17 @@ export async function getProject(
 
     const response = await client.get(
         `/projects/${projectId}`
+    );
+
+    return response.data;
+}
+
+export async function getProjectStatus(
+    projectId: string
+): Promise<ProjectStatusResponse> {
+
+    const response = await client.get(
+        `/projects/${projectId}/status`
     );
 
     return response.data;

@@ -61,6 +61,12 @@ class Project(Base):
         nullable=True,
     )
 
+    history: Mapped[dict | None] = mapped_column(
+    JSON,
+    nullable=True,
+    default=lambda: {"events": []},
+)
+
 
     ceo_analysis: Mapped[dict | None] = mapped_column(
         JSON,

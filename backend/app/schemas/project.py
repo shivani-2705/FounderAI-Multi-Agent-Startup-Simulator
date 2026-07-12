@@ -1,6 +1,8 @@
 from typing import Any
-
+from datetime import datetime
 from pydantic import BaseModel
+
+from app.memory.events import EventType
 
 
 class ProjectCreate(BaseModel):
@@ -41,6 +43,19 @@ class ProjectStatusResponse(BaseModel):
     progress: int
 
 
+class HistoryEvent(BaseModel):
+    timestamp: str
+    agent: str
+    event_type: str
+    message: str
+
+class HistoryEventResponse(BaseModel):
+    timestamp: datetime
+    agent: str
+    event_type: EventType
+    content: str
+
+
 class ProjectHistoryResponse(BaseModel):
     project_id: str
-    events: list
+    events: list[HistoryEventResponse]
