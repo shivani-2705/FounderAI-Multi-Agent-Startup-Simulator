@@ -1,27 +1,52 @@
 import { useEffect, useState } from "react";
 
-import { getHistory } from "../services/historyService";
+import { getHistory } from "../services/projectService";
+import type{ HistoryResponse } from "../types/project";
 
-import type {
-    ProjectHistoryResponse,
-} from "../types/project";
+export function useHistory(projectId: string) {
+    const [history, setHistory] = useState<HistoryResponse>({
+        project_id: "",
+        events: [],
+    });
 
-export function useHistory(
-    projectId: string
-) {
+    const [loading, setLoading] = useState(true);
 
-    const [history, setHistory] =
-        useState<ProjectHistoryResponse | null>(null);
+    const [error, setError] = useState("");
 
     useEffect(() => {
 
         if (!projectId) return;
-
-        getHistory(projectId)
-            .then(setHistory);
-
+    
+        async function load() {
+    
+            try {
+    
+                const data = await getHistory(projectId);
+    
+                setHistory(data);
+    
+            } catch {
+    
+                setError("Unable to load history.");
+    
+            } finally {
+    
+                setLoading(false);
+    
+            }
+        }
+    
+        load();
+    
+        const interval = setInterval(load, 2000);
+    
+        return () => clearInterval(interval);
+    
     }, [projectId]);
 
-    return history;
-
+    return {
+        history,
+        loading,
+        error,
+    };
 }

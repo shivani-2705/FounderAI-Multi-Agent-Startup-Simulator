@@ -6,6 +6,10 @@ import type {
     ProjectStatusResponse,
 } from "../types/project";
 
+import type{
+    HistoryResponse,
+} from "../types/project";
+
 export async function createProject(
     idea: string
 ): Promise<CreateProjectResponse> {
@@ -40,6 +44,17 @@ export async function getProjectStatus(
 
     const response = await client.get(
         `/projects/${projectId}/status`
+    );
+
+    return response.data;
+}
+
+export async function getHistory(
+    projectId: string
+): Promise<HistoryResponse> {
+
+    const response = await client.get<HistoryResponse>(
+        `/projects/${projectId}/history`
     );
 
     return response.data;

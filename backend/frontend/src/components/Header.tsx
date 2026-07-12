@@ -1,12 +1,25 @@
+import { Link } from "react-router-dom";
+
 export default function Header() {
     return (
         <header className="header">
-            <div className="logo">
-                FounderAI
-            </div>
+            <div className="header-content">
 
-            <div className="subtitle">
-                Multi-Agent Startup Simulator
+                <Link
+                    to="/"
+                    className="logo"
+                >
+                    🚀 FounderAI
+                </Link>
+
+                <nav className="nav">
+                    <Link to="/">Home</Link>
+
+                    <Link to="/dashboard">
+                        Dashboard
+                    </Link>
+                </nav>
+
             </div>
         </header>
     );

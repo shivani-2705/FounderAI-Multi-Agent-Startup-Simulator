@@ -1,22 +1,13 @@
 export default function LoadingSpinner() {
-
     return (
+        <div className="loading">
 
-        <div
-            style={{
-                textAlign: "center",
-                padding: 60,
-            }}
-        >
+            <div className="spinner" />
 
-            <h2>
-
-                FounderAI is thinking...
-
-            </h2>
+            <p>
+                AI agents are working...
+            </p>
 
         </div>
-
     );
-
 }

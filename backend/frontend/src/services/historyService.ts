@@ -1,12 +1,12 @@
 import client from "../api/client";
 
 import type {
-    ProjectHistoryResponse,
+    HistoryResponse
 } from "../types/project";
 
 export async function getHistory(
     projectId: string
-): Promise<ProjectHistoryResponse> {
+): Promise<HistoryResponse> {
 
     const response = await client.get(
         `/projects/${projectId}/history`

@@ -1,81 +1,68 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { useHistory } from "../hooks/useHistory";
 
-function getIcon(type: string): string {
-    switch (type) {
-        case "analysis":
-            return "🧠";
-
-        case "review":
-            return "🔍";
-
-        case "revision":
-            return "✏️";
-
-        case "question":
-            return "❓";
-
-        case "answer":
-            return "💬";
-
-        case "decision":
-            return "✅";
-
-        default:
-            return "📄";
-    }
-}
+import LoadingSpinner from "../components/LoadingSpinner";
+import TimelineItem from "../components/TimelineItem";
 
 export default function HistoryPage() {
     const { projectId } = useParams();
 
-    const history = useHistory(projectId ?? "");
+    const {
+        history,
+        loading,
+        error,
+    } = useHistory(projectId ?? "");
 
-    if (!history) {
-        return <p>Loading...</p>;
+    if (!projectId) {
+        return <p>Invalid project.</p>;
     }
 
-    if (history.events.length === 0) {
-        return (
-            <div className="container">
-                <h1>Workflow Timeline</h1>
+    if (loading) {
+        return <LoadingSpinner />;
+    }
 
-                <p>No history available.</p>
-            </div>
-        );
+    if (error) {
+        return <p>{error}</p>;
     }
 
     return (
         <div className="container">
-            <h1>Workflow Timeline</h1>
 
-            {history.events.map((event, index) => (
-                <div
-                    key={index}
-                    className="timeline-item"
-                >
-                    <div className="timeline-header">
-                        <span className="timeline-icon">
-                            {getIcon(event.event_type)}
-                        </span>
+            <div className="page-header">
 
-                        <strong>{event.agent}</strong>
+                <div>
+                    <h1>Workflow History</h1>
 
-                        {event.timestamp && (
-                            <span className="timeline-time">
-                                {new Date(
-                                    event.timestamp
-                                ).toLocaleString()}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="timeline-message">
-                        {event.content}
-                    </div>
+                    <p>
+                        Every conversation between the AI executives.
+                    </p>
                 </div>
-            ))}
+
+                <Link
+                    className="back-button"
+                    to={`/projects/${projectId}`}
+                >
+                    ← Back to Project
+                </Link>
+
+            </div>
+
+            <div className="timeline">
+
+                {history.events.length === 0 ? (
+                    <p>No history available.</p>
+                ) : (
+                    history.events.map((event, index) => (
+                        <TimelineItem
+                            key={index}
+                            event={event}
+                        />
+                    ))
+                )}
+
+            </div>
+
         </div>
     );
 }

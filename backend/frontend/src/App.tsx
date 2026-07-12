@@ -1,5 +1,4 @@
 import {
-  BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
@@ -12,31 +11,27 @@ import HistoryPage from "./pages/HistoryPage";
 
 export default function App() {
   return (
-      <BrowserRouter>
+      <Routes>
 
-          <MainLayout>
+          <Route element={<MainLayout />}>
 
-              <Routes>
+              <Route
+                  path="/"
+                  element={<HomePage />}
+              />
 
-                  <Route
-                      path="/"
-                      element={<HomePage />}
-                  />
+              <Route
+                  path="/projects/:projectId"
+                  element={<ProjectPage />}
+              />
 
-                  <Route
-                      path="/projects/:projectId"
-                      element={<ProjectPage />}
-                  />
+              <Route
+                  path="/projects/:projectId/history"
+                  element={<HistoryPage />}
+              />
 
-                  <Route
-                      path="/projects/:projectId/history"
-                      element={<HistoryPage />}
-                  />
+          </Route>
 
-              </Routes>
-
-          </MainLayout>
-
-      </BrowserRouter>
+      </Routes>
   );
 }

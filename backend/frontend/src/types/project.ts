@@ -40,23 +40,22 @@ export interface CreateProjectResponse {
 }
 
 
+export type EventType =
+    | "analysis"
+    | "review"
+    | "question"
+    | "answer"
+    | "revision"
+    | "decision";
+
 export interface HistoryEvent {
     timestamp: string;
     agent: string;
-    event_type:
-        | "analysis"
-        | "review"
-        | "question"
-        | "answer"
-        | "revision"
-        | "decision";
-
+    event_type: EventType;
     content: string;
-
 }
 
-export interface ProjectHistoryResponse {
+export interface HistoryResponse {
     project_id: string;
     events: HistoryEvent[];
-
 }
