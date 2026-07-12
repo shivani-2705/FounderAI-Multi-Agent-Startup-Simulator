@@ -1,6 +1,8 @@
 from datetime import datetime
 from uuid import uuid4
 
+from sqlalchemy.ext.mutable import MutableDict
+
 from sqlalchemy import (
     DateTime,
     String,
@@ -61,11 +63,11 @@ class Project(Base):
         nullable=True,
     )
 
-    history: Mapped[dict | None] = mapped_column(
-    JSON,
-    nullable=True,
-    default=lambda: {"events": []},
-)
+    history: Mapped[dict] = mapped_column(
+        MutableDict.as_mutable(JSON),
+        nullable=False,
+        default=lambda: {"events": []},
+    )
 
 
     ceo_analysis: Mapped[dict | None] = mapped_column(

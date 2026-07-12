@@ -44,8 +44,11 @@ class StartupOrchestrator:
         content: str,
     ):
 
-        if project.history is None:
-            project.history = {"events": []}
+        project.history = {
+            "events": list(
+                (project.history or {"events": []})["events"]
+            )
+}
 
         project.history["events"].append(
             AgentEvent(
@@ -54,6 +57,9 @@ class StartupOrchestrator:
                 content=content,
             ).model_dump(mode="json")
         )
+        
+       
+   
 
         project_repository.update(db, project)
 

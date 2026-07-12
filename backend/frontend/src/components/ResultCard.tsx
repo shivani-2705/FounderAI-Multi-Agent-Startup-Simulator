@@ -1,4 +1,4 @@
-import "./ResultCard.css";
+
 
 type Props = {
     title: string;
