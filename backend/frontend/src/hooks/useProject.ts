@@ -35,38 +35,32 @@ export function useProject(
 
         async function pollStatus() {
             try {
-                const statusData =
-                    await getProjectStatus(projectId);
-
+                const [statusData, projectData] =
+                    await Promise.all([
+                        getProjectStatus(projectId),
+                        getProject(projectId),
+                    ]);
+        
                 if (cancelled) {
                     return;
                 }
-
+        
                 setStatus(statusData);
-
-                if (
-                    statusData.status === "completed"
-                ) {
-                    const projectData =
-                        await getProject(projectId);
-
-                    if (cancelled) {
-                        return;
-                    }
-
-                    setProject(projectData);
+                setProject(projectData);
+        
+                if (statusData.status === "completed") {
                     setLoading(false);
                     return;
                 }
-
-                if (
-                    statusData.status === "failed"
-                ) {
+        
+                if (statusData.status === "failed") {
                     setLoading(false);
                     setError("Project execution failed.");
                     return;
                 }
-
+        
+                setLoading(false);
+        
                 timeoutId = window.setTimeout(
                     pollStatus,
                     2000,
@@ -75,14 +69,11 @@ export function useProject(
                 if (cancelled) {
                     return;
                 }
-
+        
                 setLoading(false);
-                setError(
-                    "Failed to load project.",
-                );
+                setError("Failed to load project.");
             }
         }
-
         pollStatus();
 
         return () => {
